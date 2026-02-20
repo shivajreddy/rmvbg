@@ -29,5 +29,15 @@ def upload_file():
     return render_template("index.html")
 
 
+def warm_up_model():
+    """Pre-load the model so the first request isn't slow."""
+    print("Loading model...", flush=True)
+    dummy = Image.new("RGB", (10, 10))
+    remove(dummy)
+    print("Model loaded.", flush=True)
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=5100)
+    warm_up_model()
+    print(f"Server running at http://localhost:5100", flush=True)
+    app.run(host="0.0.0.0", debug=True, port=5100, use_reloader=False)

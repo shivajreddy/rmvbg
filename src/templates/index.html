@@ -3,17 +3,24 @@
   <head>
     <title>rmvbg</title>
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
         height: 100vh;
         display: flex;
-
         align-items: center;
         justify-content: center;
         text-align: center;
+        font-family: system-ui, sans-serif;
       }
 
       .drop-zone {
         border: 2px dashed #ccc;
+        border-radius: 12px;
         padding: 20px;
         width: 80vw;
         height: 80vh;
@@ -22,58 +29,128 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s;
+      }
+
+      .drop-zone:hover {
+        border-color: #999;
       }
 
       .drop-zone.dragover {
         background-color: #f0f0f0;
+        border-color: #666;
+      }
+
+      .drop-zone h1 {
+        margin-bottom: 8px;
+        font-size: 2rem;
+      }
+
+      .drop-zone p {
+        color: #888;
+        font-size: 0.95rem;
+      }
+
+      #fileInput {
+        display: none;
+      }
+
+      #status {
+        margin-top: 16px;
+        font-size: 1rem;
+        color: #555;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #ccc;
+        border-top-color: #333;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
       }
     </style>
   </head>
   <body>
     <div id="dropZone" class="drop-zone">
       <h1>rmvbg</h1>
-      <form
-        id="uploadForm"
-        action="/"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        <input id="fileInput" type="file" name="file" />
-        <input type="submit" value="rm" />
-      </form>
+      <p>Click or drop an image here</p>
+      <input id="fileInput" type="file" name="file" accept="image/*" />
+      <div id="status"></div>
     </div>
 
     <script>
-      let dropZone = document.getElementById("dropZone");
-      let fileInput = document.getElementById("fileInput");
-      let uploadForm = document.getElementById("uploadForm");
+      const dropZone = document.getElementById("dropZone");
+      const fileInput = document.getElementById("fileInput");
+      const status = document.getElementById("status");
 
-      dropZone.addEventListener("click", function () {
-        fileInput.click();
-      });
+      function uploadFile(file) {
+        const name = file.name.replace(/\.[^.]+$/, "");
+        const outputName = name + "_rmvbg.png";
 
-      fileInput.addEventListener("change", function () {
+        status.innerHTML = '<span class="spinner"></span>Removing background...';
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        fetch("/", { method: "POST", body: formData })
+          .then((res) => {
+            if (!res.ok) throw new Error("Upload failed");
+            return res.blob();
+          })
+          .then((blob) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = outputName;
+            a.click();
+            URL.revokeObjectURL(url);
+            status.textContent = "Done! Image downloaded.";
+          })
+          .catch(() => {
+            status.textContent = "Something went wrong. Try again.";
+          });
+      }
+
+      // Click anywhere in drop zone to open file picker
+      dropZone.addEventListener("click", () => fileInput.click());
+
+      // Prevent clicks on the input from bubbling back to drop zone
+      fileInput.addEventListener("click", (e) => e.stopPropagation());
+
+      // File selected via picker
+      fileInput.addEventListener("change", () => {
         if (fileInput.files.length > 0) {
-          uploadForm.submit();
+          uploadFile(fileInput.files[0]);
+          fileInput.value = "";
         }
       });
 
-      dropZone.addEventListener("dragover", function (e) {
-        this.classList.add("dragover");
+      // Drag and drop
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
       });
 
-      dropZone.addEventListener("dragleave", function (e) {
-        this.classList.remove("dragover");
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
       });
 
-      dropZone.addEventListener("drop", function (e) {
+      dropZone.addEventListener("drop", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.classList.remove("dragover");
+        dropZone.classList.remove("dragover");
 
-        let file = e.dataTransfer.files[0];
-        fileInput.files = e.dataTransfer.files;
-        uploadForm.submit();
+        if (e.dataTransfer.files.length > 0) {
+          uploadFile(e.dataTransfer.files[0]);
+        }
       });
     </script>
   </body>
