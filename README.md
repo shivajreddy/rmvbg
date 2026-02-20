@@ -12,7 +12,7 @@ rmvbg/
 │   ├── app.py            # Flask web server
 │   ├── cli.py            # CLI for single image processing
 │   ├── models/
-│   │   └── u2net.onnx    # U2-Net model weights (git-ignored)
+│   │   └── u2net.onnx    # U2-Net model weights (git-ignored, see below)
 │   └── templates/
 │       └── index.html    # Web UI
 ├── requirements.txt
@@ -51,13 +51,13 @@ pip install -r requirements.txt
 
 ### Download the Model
 
-Download the U2-Net ONNX model into `src/models/`:
+Download the U2-Net ONNX model (~168MB) into `src/models/`:
 
 ```bash
 curl -L -o src/models/u2net.onnx https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx
 ```
 
-On first run, `rembg` will also auto-download the model if it is not found, but pre-downloading avoids the wait.
+Alternatively, `rembg` will auto-download the model on first run, but pre-downloading avoids the wait.
 
 ### Run the Web Server
 
@@ -85,7 +85,7 @@ python src/cli.py photo.png result.png
 
 - Docker
 
-The model file (`src/models/u2net.onnx`) must be present before building. See [Download the Model](#download-the-model) above.
+The model is downloaded automatically during the Docker build -- no manual step needed.
 
 ### Build
 

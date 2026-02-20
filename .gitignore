@@ -1,4 +1,4 @@
-# Model weights
+# Model weights (>100MB, exceeds GitHub limit)
 *.onnx
 
 # Python
