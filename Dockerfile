@@ -1,17 +1,18 @@
-FROM python:3.9
+FROM python:3.9-slim
 
-# download this https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx
-# copy model to avoid unnecessary download
-COPY u2net.onnx /home/.u2net/u2net.onnx
+# Pre-copy model to avoid runtime download
+COPY src/models/u2net.onnx /home/.u2net/u2net.onnx
 
 WORKDIR /app
 
 COPY requirements.txt .
-
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY src/ src/
+
+# Model is already in /home/.u2net/; no need to duplicate it inside the container
+RUN rm -f src/models/u2net.onnx
 
 EXPOSE 5100
 
-CMD ["python", "app.py"]
+CMD ["python", "src/app.py"]
