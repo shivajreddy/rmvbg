@@ -1,4 +1,4 @@
-# rmvbg
+# rmbg
 
 Remove image backgrounds with a simple web UI or CLI. Powered by [rembg](https://github.com/danielgatis/rembg) (U2-Net).
 
@@ -7,7 +7,7 @@ Upload an image via the browser (drag-and-drop supported), and download the resu
 ## Project Structure
 
 ```
-rmvbg/
+rmbg/
 ├── src/
 │   ├── app.py            # Flask web server
 │   ├── cli.py            # CLI for single image processing
@@ -33,8 +33,8 @@ rmvbg/
 
 ```bash
 # Clone the repository
-git clone https://github.com/shivajreddy/rmvbg.git
-cd rmvbg
+git clone https://github.com/shivajreddy/rmbg.git
+cd rmbg
 
 # Create and activate a virtual environment
 python -m venv venv
@@ -90,13 +90,13 @@ The model is downloaded automatically during the Docker build -- no manual step 
 ### Build
 
 ```bash
-docker build -t rmvbg .
+docker build -t rmbg .
 ```
 
 ### Run
 
 ```bash
-docker run --rm --name rmvbg -p 5100:5100 rmvbg
+docker run --rm --name rmbg -p 5100:5100 rmbg
 ```
 
 Open [http://localhost:5100](http://localhost:5100).
@@ -104,13 +104,13 @@ Open [http://localhost:5100](http://localhost:5100).
 To run in the background:
 
 ```bash
-docker run -d --rm --name rmvbg -p 5100:5100 rmvbg
+docker run -d --rm --name rmbg -p 5100:5100 rmbg
 ```
 
 Stop it with:
 
 ```bash
-docker stop rmvbg
+docker stop rmbg
 ```
 
 ## License

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>rmvbg</title>
+    <title>rmbg</title>
     <style>
       * {
         margin: 0;
@@ -80,7 +80,7 @@
   </head>
   <body>
     <div id="dropZone" class="drop-zone">
-      <h1>rmvbg</h1>
+      <h1>rmbg</h1>
       <p>Click or drop an image here</p>
       <input id="fileInput" type="file" name="file" accept="image/*" />
       <div id="status"></div>
@@ -93,7 +93,7 @@
 
       function uploadFile(file) {
         const name = file.name.replace(/\.[^.]+$/, "");
-        const outputName = name + "_rmvbg.png";
+        const outputName = name + "_rmbg.png";
 
         status.innerHTML = '<span class="spinner"></span>Removing background...';
 
