@@ -96,7 +96,7 @@ docker build -t rmvbg .
 ### Run
 
 ```bash
-docker run -p 5100:5100 rmvbg
+docker run --rm --name rmvbg -p 5100:5100 rmvbg
 ```
 
 Open [http://localhost:5100](http://localhost:5100).
@@ -104,7 +104,7 @@ Open [http://localhost:5100](http://localhost:5100).
 To run in the background:
 
 ```bash
-docker run -d -p 5100:5100 --name rmvbg rmvbg
+docker run -d --rm --name rmvbg -p 5100:5100 rmvbg
 ```
 
 Stop it with:
